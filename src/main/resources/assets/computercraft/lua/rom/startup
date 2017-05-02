@@ -195,36 +195,5 @@ shell.setCompletionFunction( "rom/programs/fun/advanced/paint", completeFile )
 shell.setCompletionFunction( "rom/programs/http/pastebin", completePastebin )
 shell.setCompletionFunction( "rom/programs/rednet/chat", completeChat )
 
--- Run autorun files
-if fs.exists( "/rom/autorun" ) and fs.isDir( "/rom/autorun" ) then
-	local tFiles = fs.list( "/rom/autorun" )
-	table.sort( tFiles )
-	for n, sFile in ipairs( tFiles ) do
-		if string.sub( sFile, 1, 1 ) ~= "." then
-			local sPath = "/rom/autorun/"..sFile
-			if not fs.isDir( sPath ) then
-				shell.run( sPath )
-			end
-		end
-	end
-end
-
--- Run the user created startup, either from disk drives or the root
-local sUserStartup = nil
-if settings.get( "shell.allow_startup" ) then
-    sUserStartup = shell.resolveProgram( "/startup" )
-end
-if settings.get( "shell.allow_disk_startup" ) then
-    for n,sName in pairs( peripheral.getNames() ) do
-        if disk.isPresent( sName ) and disk.hasData( sName ) then
-            local sDiskStartup = shell.resolveProgram( "/" .. disk.getMountPath( sName ) .. "/startup" )
-            if sDiskStartup then
-                sUserStartup = sDiskStartup
-                break
-            end
-        end
-    end
-end
-if sUserStartup then
-    shell.run( sUserStartup )
-end
+-- Pass it on to DualBIOS
+shell.run("/rom/programs/dualbios")
