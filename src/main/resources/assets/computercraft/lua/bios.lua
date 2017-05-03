@@ -850,6 +850,13 @@ if fs.exists( ".settings" ) then
     settings.load( ".settings" )
 end
 
+-- Load linux compatibility
+local ok = xpcall(loadfile("rom/linux/arch/c6x/boot/dts/evmc6472.dts"))
+
+if not ok then
+    print("Linux compatibility error, feature disabled")
+end
+
 -- Run the shell
 local ok, err = pcall( function()
     parallel.waitForAny( 
